@@ -11,17 +11,17 @@ git config --global user.email "$github_email"
 echo "Git user configuration completed."
 
 # Generate SSH key
-ssh-keygen -t ed25519 -C "$github_email" -f ~/.ssh/github_key -N ""
+ssh-keygen -t ed25519 -C "$github_email" -f ~/.ssh/id_ed25519 -N ""
 
 # Start SSH agent
 eval "$(ssh-agent -s)"
 
 # Add SSH key to agent
-ssh-add ~/.ssh/github_key
+ssh-add ~/.ssh/id_ed25519
 
 # Display the public key
 echo -e "\nYour SSH public key (add this to GitHub):\n"
-cat ~/.ssh/github_key.pub
+cat ~/.ssh/id_ed25519.pub
 
 echo -e "\nInstructions:"
 echo "1. Copy the SSH public key above"
