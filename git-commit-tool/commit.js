@@ -12,6 +12,16 @@ config({ path: ".env.local" });
 // AI Variables
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
 
+/**
+ * Utility function to conditionally log messages
+ * @param {string} message - The message to log
+ */
+const log = (message) => {
+  if (process.env.SHOW_LOGS === "true") {
+    console.log(message);
+  }
+};
+
 const schema = {
   description: "Commit message",
   type: SchemaType.OBJECT,
@@ -34,7 +44,7 @@ const model = genAI.getGenerativeModel({
 });
 
 // Data Variables
-console.log("Commit Scopes:", process.env.COMMIT_SCOPES);
+log("Commit Scopes:" + process.env.COMMIT_SCOPES);
 
 // Validate required environment variables
 if (!process.env.REPO_DIR) {
@@ -141,12 +151,12 @@ const gitCommit = (message) => {
           return;
         }
 
-        if (stderr) {
+        if (stderr && process.env.SHOW_LOGS === "true") {
           // Git sometimes writes to stderr for non-error messages
           console.log(stderr);
         }
 
-        if (stdout) {
+        if (stdout && process.env.SHOW_LOGS === "true") {
           console.log(stdout);
         }
 
@@ -174,15 +184,15 @@ ${statusOutput}
 Changes (diff):
 ${diffOutput}`;
 
-    console.log("Generated Prompt:", prompt);
+    log("Generated Prompt:" + prompt);
 
     const result = await model.generateContent(prompt);
     const { commitMessage } = JSON.parse(result.response.text());
 
-    console.log("Commit Message:", commitMessage);
+    log("Commit Message:" + commitMessage);
     await gitCommit(commitMessage);
 
-    console.log("Commit successful!");
+    console.log("\nCommit successful! 🎉");
   } catch (error) {
     console.error("Error executing git commands:", error.message);
     process.exit(1);
