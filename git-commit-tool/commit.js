@@ -194,9 +194,9 @@ ${diffOutput}`;
     const result = await model.generateContent(prompt);
     const { commitMessage } = JSON.parse(result.response.text());
 
-    log("Commit Message:" + commitMessage);
     await gitCommit(commitMessage);
 
+    console.log("\nCommit Message: ", commitMessage);
     console.log("\nCommit successful! 🎉");
   } catch (error) {
     console.error("Error executing git commands:", error.message);
