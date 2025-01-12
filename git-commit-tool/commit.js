@@ -8,9 +8,17 @@ import { config } from "dotenv";
 
 config({ path: ".env.local" });
 
-// Variables
-// AI Variables
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
+const commitTypes = [
+  "fix",
+  "feat",
+  "refactor",
+  "chore",
+  "docs",
+  "style",
+  "test",
+  "ci",
+];
 
 /**
  * Utility function to conditionally log messages
@@ -28,7 +36,7 @@ const schema = {
   properties: {
     commitMessage: {
       type: SchemaType.STRING,
-      description: `Commit message with the scope being one of ${process.env.COMMIT_SCOPES}`,
+      description: `Commit message with the scope being one of ${process.env.COMMIT_SCOPES} and the commit type being one of the most relevant ${commitTypes}.`,
       nullable: false,
     },
   },
@@ -42,9 +50,6 @@ const model = genAI.getGenerativeModel({
     responseSchema: schema,
   },
 });
-
-// Data Variables
-log("Commit Scopes:" + process.env.COMMIT_SCOPES);
 
 // Validate required environment variables
 if (!process.env.REPO_DIR) {
