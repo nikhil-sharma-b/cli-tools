@@ -2,6 +2,8 @@ import { exec } from "child_process";
 import { config } from "dotenv";
 import OpenAI from "openai";
 
+config({ path: ".env.local" });
+
 const token = process.env["GITHUB_TOKEN"];
 const endpoint = "https://models.inference.ai.azure.com";
 const modelName = "gpt-4o";
@@ -15,8 +17,6 @@ const commitTypes = [
   "test",
   "ci",
 ];
-
-config({ path: ".env.local" });
 
 if (!process.env.REPO_DIR) {
   console.error("Error: REPO_DIR environment variable is not set");
