@@ -16,7 +16,6 @@ if (process.argv.includes("--setup")) {
   import("./ai.js")
     .then(({ generateCommitMessage }) => generateCommitMessage())
     .then((commitMessage) => {
-      console.log("\nGenerated commit message:", commitMessage);
       return import("./git-actions.js").then(({ gitCommit }) => {
         return gitCommit(commitMessage);
       });
