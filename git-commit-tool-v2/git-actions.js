@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 // Load environment variables from .env.local
 dotenv.config({ path: ".env.local" });
 
+// Debug logging flag
+const SHOW_LOGS = false;
+
 const repoPath = process.env.PATH_TO_GIT_REPO;
 
 if (!repoPath) {
@@ -83,7 +86,8 @@ export function gitCommit(commitMessage) {
     ) {
       return error.stdout; // Return the output as it was likely a successful commit
     }
-    console.error("Error running git commit:", error.message);
+    // Only log error if it's a genuine failure
+    if (SHOW_LOGS) console.error("Error running git commit:", error.message);
     return null;
   }
 }
