@@ -74,6 +74,15 @@ export function gitCommit(commitMessage) {
       encoding: "utf-8",
     });
   } catch (error) {
+    // Check if the error contains a successful commit message
+    // Git sometimes exits with code 1 even on successful commits due to hooks or other factors
+    if (
+      error.stdout &&
+      (error.stdout.includes("file changed") ||
+        error.stdout.includes("files changed"))
+    ) {
+      return error.stdout; // Return the output as it was likely a successful commit
+    }
     console.error("Error running git commit:", error.message);
     return null;
   }

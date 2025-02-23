@@ -96,8 +96,6 @@ IMPORTANT: You must respond with ONLY a JSON object in this format:
         throw new Error("No commit message was generated");
       }
 
-      console.log("\nGenerated commit message:", commitMessage);
-
       // Validate format
       const formatRegex =
         /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)\(([^)]+)\): .+$/;
@@ -120,8 +118,12 @@ IMPORTANT: You must respond with ONLY a JSON object in this format:
 
       // Commit the staged changes with the generated commit message
       const commitOutput = gitCommit(commitMessage);
+      if (commitOutput === null) {
+        throw new Error("Failed to commit changes");
+      }
       if (SHOW_LOGS) console.log("Git commit output:", commitOutput);
 
+      console.log("\nSuccessfully committed with message:", commitMessage);
       return commitMessage;
     } catch (parseError) {
       if (SHOW_LOGS) console.error("Error parsing AI response:", parseError);
