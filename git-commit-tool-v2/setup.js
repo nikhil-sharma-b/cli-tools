@@ -25,7 +25,6 @@ async function getUserInputs() {
         "(e.g., ['feat','fix'] or feat,fix)"
       )}:`,
       validate: (input) => {
-        // Validate if input is a string or an already parsed array.
         if (typeof input !== "string") {
           if (Array.isArray(input) && input.length > 0) {
             return true;
@@ -44,7 +43,6 @@ async function getUserInputs() {
         }
       },
       filter: (input) => {
-        // If not a string, assume it's already in the correct format.
         if (typeof input !== "string") {
           return input;
         }
@@ -116,7 +114,7 @@ function updateEnvFile(inputs) {
   console.log(`Updated ${envFilePath} with the new environment variables.`);
 }
 
-async function run() {
+export async function runSetup() {
   const envFilePath = path.join(process.cwd(), ".env.local");
   let fileExists = fs.existsSync(envFilePath);
   let envContent = "";
@@ -146,8 +144,3 @@ async function run() {
   const inputs = await getUserInputs();
   updateEnvFile(inputs);
 }
-
-run().catch((error) => {
-  console.error("Error:", error);
-  process.exit(1);
-});
