@@ -19,9 +19,7 @@ if (!repoPath) {
  */
 export function gitStatus() {
   try {
-    const output = execSync("git status", { cwd: repoPath, encoding: "utf-8" });
-    console.log(output);
-    return output;
+    return execSync("git status", { cwd: repoPath, encoding: "utf-8" });
   } catch (error) {
     console.error("Error running git status:", error.message);
     return null;
@@ -34,11 +32,28 @@ export function gitStatus() {
  */
 export function gitDiff() {
   try {
-    const output = execSync("git diff", { cwd: repoPath, encoding: "utf-8" });
-    console.log(output);
-    return output;
+    return execSync("git diff", { cwd: repoPath, encoding: "utf-8" });
   } catch (error) {
     console.error("Error running git diff:", error.message);
+    return null;
+  }
+}
+
+/**
+ * Runs 'git add' in the repository defined by PATH_TO_GIT_REPO.
+ * By default, adds all changes. You can pass a specific file or an array of files.
+ * @param {string|string[]} [files="."] - The file(s) to add.
+ * @returns {string|null} The output from 'git add' or null if an error occurred.
+ */
+export function gitAdd(files = ".") {
+  try {
+    let filesArg = Array.isArray(files) ? files.join(" ") : files;
+    return execSync(`git add ${filesArg}`, {
+      cwd: repoPath,
+      encoding: "utf-8",
+    });
+  } catch (error) {
+    console.error("Error running git add:", error.message);
     return null;
   }
 }
@@ -54,13 +69,10 @@ export function gitCommit(commitMessage) {
     return null;
   }
   try {
-    // Note: Ensure that changes have been staged prior to committing.
-    const output = execSync(`git commit -m "${commitMessage}"`, {
+    return execSync(`git commit -m "${commitMessage}"`, {
       cwd: repoPath,
       encoding: "utf-8",
     });
-    console.log(output);
-    return output;
   } catch (error) {
     console.error("Error running git commit:", error.message);
     return null;

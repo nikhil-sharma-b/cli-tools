@@ -12,6 +12,17 @@ if (process.argv.includes("--setup")) {
       process.exit(1);
     });
 } else {
-  console.log("No setup flag provided. Running the main application...");
-  // Add your main application logic here.
+  console.log("Generating AI commit message...");
+  import("./ai.js")
+    .then(({ generateCommitMessage }) => generateCommitMessage())
+    .then((commitMessage) => {
+      console.log("\nGenerated commit message:", commitMessage);
+      return import("./git-actions.js").then(({ gitCommit }) => {
+        return gitCommit(commitMessage);
+      });
+    })
+    .catch((err) => {
+      console.error("Error:", err.message);
+      process.exit(1);
+    });
 }
